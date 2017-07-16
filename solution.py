@@ -29,7 +29,8 @@ def naked_twins(values):
 
 def cross(A, B):
     "Cross product of elements in A and elements in B."
-    pass
+    # Using the same code as was used in the Udacity course content/quizzes
+    return [s+t for s in A for t in B]
 
 def grid_values(grid):
     """
@@ -41,15 +42,26 @@ def grid_values(grid):
             Keys: The boxes, e.g., 'A1'
             Values: The value in each box, e.g., '8'. If the box has no value, then the value will be '123456789'.
     """
-    pass
+    assert len(grid) == 81, "Must have 81 characters in grid string"
+    unsolved_string = '123456789'
+    grid_list = [x if x != '.' else unsolved_string for x in list(grid)]
+    return dict(zip(boxes, grid_list))
 
 def display(values):
     """
     Display the values as a 2-D grid.
     Args:
         values(dict): The sudoku in dictionary form
+    Returns:
+        Nothing
     """
-    pass
+    # Using the same code as was used in the Udacity course content/quizzes
+    width = 1 + max(len(values[s]) for s in boxes)
+    line = '+'.join(['-' * (width * 3)] * 3)
+    for r in rows:
+        print(''.join(values[r+c].center(width) + ('|' if c in '36' else '') for c in cols))
+        if r in 'CF': print(line)
+    return
 
 def eliminate(values):
     pass
@@ -72,6 +84,12 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
+    return grid_values(grid)
+
+rows = 'ABCDEFGHI'
+cols = '123456789'
+
+boxes = cross(rows, cols)
 
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'

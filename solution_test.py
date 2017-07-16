@@ -94,5 +94,31 @@ class TestDiagonalSudoku(unittest.TestCase):
     def test_solve(self):
         self.assertEqual(solution.solve(self.diagonal_grid), self.solved_diag_sudoku)
 
+class TestGridValues(unittest.TestCase):
+    diagonal_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
+
+    def test_length_check(self):
+        with self.assertRaisesRegex(AssertionError, '81 characters'):
+            solution.grid_values('123')
+
+    def test_dict_length(self):
+        values = solution.grid_values(self.diagonal_grid)
+        self.assertEqual(len(values), 81)
+
+    def test_dict_key_format(self):
+        values = solution.grid_values(self.diagonal_grid)
+        self.assertTrue('A1' in values.keys())
+        self.assertTrue('C6' in values.keys())
+        self.assertTrue('I9' in values.keys())
+
+    def test_direct_copy_of_solved_boxes(self):
+        values = solution.grid_values(self.diagonal_grid)
+        self.assertEqual(values['A1'], '2')
+        self.assertEqual(values['B6'], '6')
+
+    def test_unsolved_string_substitution(self):
+        values = solution.grid_values(self.diagonal_grid)
+        self.assertEqual(values['A2'], '123456789')
+
 if __name__ == '__main__':
     unittest.main()
