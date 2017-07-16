@@ -83,7 +83,28 @@ def eliminate(values):
     return values
 
 def only_choice(values):
-    pass
+    """
+    Isolate and options that are the only choice for a unit and assign them.
+
+    Args:
+        values(dict): The sudokue in dictionary form
+    Returns:
+        The dictionary representation of the resulting sudoku grid.
+    """
+    for unit in unitlist:
+        unsolved_boxes = [box for box in unit if len(values[box]) > 1]
+
+        for box in unsolved_boxes:
+            box_set = set(values[box])
+            other_boxes = [b for b in unit if b != box] #Don't want to consider itself.
+            
+            for b in other_boxes:
+                box_set = box_set - set(values[b])
+
+            if len(box_set) == 1:
+                values[box] = box_set.pop()
+
+    return values
 
 def reduce_puzzle(values):
     pass

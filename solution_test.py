@@ -160,5 +160,32 @@ class TestEliminate(unittest.TestCase):
         self.assertEqual(eliminated_values['D7'], '9')
         self.assertEqual(eliminated_values['H1'], '8')
 
+class TestOnlyChoice(unittest.TestCase):
+    values = {'A1': '45', 'A2': '4578', 'A3': '3', 'A4': '9', 'A5': '2', 'A6': '14', 'A7': '6', 'A8': '5789', 'A9': '57',
+    'B1': '9', 'B2': '24678', 'B3': '47', 'B4': '3', 'B5': '47', 'B6': '5', 'B7': '78', 'B8': '278', 'B9': '1',
+    'C1': '25', 'C2': '257', 'C3': '1', 'C4': '8', 'C5': '79', 'C6': '6', 'C7': '4', 'C8': '23579', 'C9': '2357',
+    'D1': '345', 'D2': '345', 'D3': '8', 'D4': '1', 'D5': '3456', 'D6': '2', 'D7': '9', 'D8': '34567', 'D9': '34567',
+    'E1': '7', 'E2': '123459', 'E3': '49', 'E4': '59', 'E5': '34569', 'E6': '4', 'E7': '1', 'E8': '13456', 'E9': '8',
+    'F1': '1345', 'F2': '13459', 'F3': '6', 'F4': '7', 'F5': '3459', 'F6': '8', 'F7': '2', 'F8': '1345', 'F9': '345',
+    'G1': '134', 'G2': '1347', 'G3': '2', 'G4': '6', 'G5': '8', 'G6': '9', 'G7': '5', 'G8': '1478', 'G9': '47',
+    'H1': '8', 'H2': '1467', 'H3': '47', 'H4': '2', 'H5': '5', 'H6': '3', 'H7': '17', 'H8': '1467', 'H9': '9',
+    'I1': '6', 'I2': '69', 'I3': '5', 'I4': '4', 'I5': '1', 'I6': '7', 'I7': '3', 'I8': '268', 'I9': '26'}
+
+    def test_only_choice_in_row(self):
+        only_choiced_values = solution.only_choice(self.values.copy())
+        self.assertEqual(only_choiced_values['B2'], '6')
+
+    def test_only_choice_in_col(self):
+        only_choiced_values = solution.only_choice(self.values.copy())
+        self.assertEqual(only_choiced_values['E3'], '9')
+
+    def test_only_choice_in_square(self):
+        only_choiced_values = solution.only_choice(self.values.copy())
+        self.assertEqual(only_choiced_values['A6'], '1')
+
+    def test_only_choice_preserves_solved_values(self):
+        only_choiced_values = solution.only_choice(self.values.copy())
+        self.assertEqual(only_choiced_values['F4'], '7')
+
 if __name__ == '__main__':
     unittest.main()
