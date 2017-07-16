@@ -137,25 +137,25 @@ class TestEliminate(unittest.TestCase):
     'I8': '123456789', 'I9': '123456789'}
 
     def test_eliminates_horizontal_peers(self):
-        eliminated_values = solution.eliminate(self.values)
+        eliminated_values = solution.eliminate(self.values.copy())
         self.assertTrue('3' not in eliminated_values['A1'])
         self.assertTrue('2' not in eliminated_values['A1'])
         self.assertTrue('6' not in eliminated_values['A1'])
 
     def test_eliminates_vertical_peers(self):
-        eliminated_values = solution.eliminate(self.values)
+        eliminated_values = solution.eliminate(self.values.copy())
         self.assertTrue('9' not in eliminated_values['A1'])
         self.assertTrue('7' not in eliminated_values['A1'])
         self.assertTrue('8' not in eliminated_values['A1'])
 
     def test_eliminate_square_peers(self):
-        eliminated_values = solution.eliminate(self.values)
+        eliminated_values = solution.eliminate(self.values.copy())
         self.assertTrue('1' not in eliminated_values['A1'])
         self.assertTrue('9' not in eliminated_values['A2'])
         self.assertTrue('3' not in eliminated_values['B2'])
 
     def test_eliminate_preserves_solved_values(self):
-        eliminated_values = solution.eliminate(self.values)
+        eliminated_values = solution.eliminate(self.values.copy())
         self.assertEqual(eliminated_values['A3'], '3')
         self.assertEqual(eliminated_values['D7'], '9')
         self.assertEqual(eliminated_values['H1'], '8')
