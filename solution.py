@@ -64,7 +64,23 @@ def display(values):
     return
 
 def eliminate(values):
-    pass
+    """
+    Find boxes which have already been solved, i.e. only have a single value
+    and eliminate that value from any of its peers.
+
+    Args:
+        values(dict): The sudoku in dictionary form
+    Returns:
+        The dictionary representation of the resulting sudoku grid.
+    """
+    for key, val in values.items():
+        if len(val) == 1:
+            for peer in peers[key]:
+                new_value = values[peer].replace(val, '')
+                if new_value != values[peer]:
+                    assign_value(values, peer, new_value)
+
+    return values
 
 def only_choice(values):
     pass
@@ -84,12 +100,22 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
-    return grid_values(grid)
+    values = grid_values(grid)
+    eliminate(values)
+
+    return values
 
 rows = 'ABCDEFGHI'
 cols = '123456789'
 
 boxes = cross(rows, cols)
+
+row_units = [cross(r, cols) for r in rows]
+column_units = [cross(rows, c) for c in cols]
+square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
+unitlist = row_units + column_units + square_units
+units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
+peers = dict((s, set(sum(units[s],[])) - set([s])) for s in boxes)
 
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'

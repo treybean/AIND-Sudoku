@@ -120,5 +120,45 @@ class TestGridValues(unittest.TestCase):
         values = solution.grid_values(self.diagonal_grid)
         self.assertEqual(values['A2'], '123456789')
 
+class TestEliminate(unittest.TestCase):
+    values = {'A1': '123456789', 'A2': '123456789', 'A3': '3', 'A4': '123456789', 'A5': '2',
+    'A6': '123456789', 'A7': '6', 'A8': '123456789', 'A9': '123456789', 'B1': '9', 'B2': '123456789',
+    'B3': '123456789', 'B4': '3', 'B5': '123456789', 'B6': '5', 'B7': '123456789', 'B8': '123456789',
+    'B9': '1', 'C1': '123456789', 'C2': '123456789', 'C3': '1', 'C4': '8', 'C5': '123456789', 'C6': '6',
+    'C7': '4', 'C8': '123456789', 'C9': '123456789', 'D1': '123456789', 'D2': '123456789', 'D3': '8',
+    'D4': '1', 'D5': '123456789', 'D6': '2', 'D7': '9', 'D8': '123456789', 'D9': '123456789', 'E1': '7',
+    'E2': '123456789', 'E3': '123456789', 'E4': '123456789', 'E5': '123456789', 'E6': '123456789',
+    'E7': '123456789', 'E8': '123456789', 'E9': '8', 'F1': '123456789', 'F2': '123456789', 'F3': '6',
+    'F4': '7', 'F5': '123456789', 'F6': '8', 'F7': '2', 'F8': '123456789', 'F9': '123456789',
+    'G1': '123456789', 'G2': '123456789', 'G3': '2', 'G4': '6', 'G5': '123456789', 'G6': '9', 'G7': '5',
+    'G8': '123456789', 'G9': '123456789', 'H1': '8', 'H2': '123456789', 'H3': '123456789', 'H4': '2',
+    'H5': '123456789', 'H6': '3', 'H7': '123456789', 'H8': '123456789', 'H9': '9', 'I1': '123456789',
+    'I2': '123456789', 'I3': '5', 'I4': '123456789', 'I5': '1', 'I6': '123456789', 'I7': '3',
+    'I8': '123456789', 'I9': '123456789'}
+
+    def test_eliminates_horizontal_peers(self):
+        eliminated_values = solution.eliminate(self.values)
+        self.assertTrue('3' not in eliminated_values['A1'])
+        self.assertTrue('2' not in eliminated_values['A1'])
+        self.assertTrue('6' not in eliminated_values['A1'])
+
+    def test_eliminates_vertical_peers(self):
+        eliminated_values = solution.eliminate(self.values)
+        self.assertTrue('9' not in eliminated_values['A1'])
+        self.assertTrue('7' not in eliminated_values['A1'])
+        self.assertTrue('8' not in eliminated_values['A1'])
+
+    def test_eliminate_square_peers(self):
+        eliminated_values = solution.eliminate(self.values)
+        self.assertTrue('1' not in eliminated_values['A1'])
+        self.assertTrue('9' not in eliminated_values['A2'])
+        self.assertTrue('3' not in eliminated_values['B2'])
+
+    def test_eliminate_preserves_solved_values(self):
+        eliminated_values = solution.eliminate(self.values)
+        self.assertEqual(eliminated_values['A3'], '3')
+        self.assertEqual(eliminated_values['D7'], '9')
+        self.assertEqual(eliminated_values['H1'], '8')
+
 if __name__ == '__main__':
     unittest.main()
