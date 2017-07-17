@@ -102,7 +102,7 @@ def only_choice(values):
                 box_set = box_set - set(values[b])
 
             if len(box_set) == 1:
-                values[box] = box_set.pop()
+                assign_value(values, box, box_set.pop())
 
     return values
 
