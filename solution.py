@@ -151,7 +151,37 @@ def reduce_puzzle(values):
     return values
 
 def search(values):
-    pass
+    """
+    Using depth-first search and propagation, create a search tree and solve the sudoku.
+
+    Args:
+        values(dict): The sudokue in dictionary form
+    Returns:
+        The dictionary representation of the resulting sudoku grid.
+    """
+    values = reduce_puzzle(values)
+
+    if values is False:
+        return False
+
+    unsolved_boxes = [box for box in values if len(values[box]) > 1]
+
+    if len(unsolved_boxes) == 0:
+        return values #already solved
+
+    # Branch search on the box with the fewest digits
+    branch_box = sorted(unsolved_boxes, key=lambda box: len(values[box]))[0]
+
+    # Recuresively solve each one of the resulting sudokus, returning the first one
+    # to return a value, indicating a solution.
+    for digit in values[branch_box]:
+        branched_values = values.copy()
+        branched_values[branch_box] = digit
+
+        result = search(branched_values)
+
+        if result:
+            return result
 
 def solve(grid):
     """
@@ -163,9 +193,8 @@ def solve(grid):
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
     values = grid_values(grid)
-    eliminate(values)
 
-    return values
+    return search(values)
 
 rows = 'ABCDEFGHI'
 cols = '123456789'
@@ -181,7 +210,8 @@ peers = dict((s, set(sum(units[s],[])) - set([s])) for s in boxes)
 
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
-    display(solve(diag_sudoku_grid))
+    values = solve(diag_sudoku_grid)
+    display(values)
 
     try:
         from visualize import visualize_assignments

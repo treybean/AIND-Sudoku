@@ -215,7 +215,12 @@ class TestReducePuzzle(unittest.TestCase):
         self.assertEqual(reduced_values, False)
 
 
-
+class TestSearch(unittest.TestCase):
+    def test_solves_complex_grids(self):
+        grid = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
+        values = solution.grid_values(grid)
+        solved_values = solution.search(values)
+        self.assertNotEqual(solved_values, False)
 
 
 if __name__ == '__main__':
