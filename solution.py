@@ -19,16 +19,41 @@ def assign_value(values, box, value):
     return values
 
 def naked_twins(values):
-    """Eliminate values using the naked twins strategy.
+    """
+    Eliminate values using the naked twins strategy.
+
     Args:
         values(dict): a dictionary of the form {'box_name': '123456789', ...}
 
     Returns:
         the values dictionary with the naked twins eliminated from peers.
     """
+    for unit in unitlist:
+        unsolved_boxes = [box for box in unit if len(values[box]) > 1]
 
-    # Find all instances of naked twins
-    # Eliminate the naked twins as possibilities for their peers
+        # Create dictionary where the available values are the keys and a list of
+        # the corresponding boxes that have those values are the values of the
+        # dictionary.
+        values_dict = {}
+
+        for box in unsolved_boxes:
+            values_dict.setdefault(values[box], [])
+            values_dict[values[box]].append(box)
+
+        # find value sets that have the same number of boxes as the length of the
+        # value set. Note: this handles naked triplets and quadruplets as well.
+        naked_sets = [s for s in values_dict.keys() if len(s) == len(values_dict[s])]
+
+        for naked_set in naked_sets:
+            other_boxes = [box for box in unsolved_boxes if box not in values_dict[naked_set]]
+
+            for box in other_boxes:
+                for val in naked_set:
+                    new_value = values[box].replace(val, '')
+                    if new_value != values[box]:
+                        assign_value(values, box, new_value)
+
+    return values
 
 def cross(A, B):
     "Cross product of elements in A and elements in B."
