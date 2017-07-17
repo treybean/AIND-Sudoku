@@ -1,5 +1,8 @@
 assignments = []
 
+rows = 'ABCDEFGHI'
+cols = '123456789'
+
 def assign_value(values, box, value):
     """
     Please use this function to update your values dictionary!
@@ -183,7 +186,7 @@ def search(values):
         if result:
             return result
 
-def solve(grid):
+def solve(grid, diagonal=True):
     """
     Find the solution to a Sudoku grid.
     Args:
@@ -192,21 +195,40 @@ def solve(grid):
     Returns:
         The dictionary representation of the final sudoku grid. False if no solution exists.
     """
+    setup(diagonal)
     values = grid_values(grid)
-
     return search(values)
 
-rows = 'ABCDEFGHI'
-cols = '123456789'
+def setup(diagonal=True):
+    global boxes
+    boxes = cross(rows, cols)
 
-boxes = cross(rows, cols)
+    row_units = [cross(r, cols) for r in rows]
+    column_units = [cross(rows, c) for c in cols]
+    square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
+    forward_diagonal_unit = [r + str(i+1) for (i, r) in enumerate(rows)]
+    reverse_diagonal_unit = [r + str(len(rows) - i) for (i, r) in enumerate(rows)]
+    diagonal_units = [forward_diagonal_unit, reverse_diagonal_unit]
 
-row_units = [cross(r, cols) for r in rows]
-column_units = [cross(rows, c) for c in cols]
-square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
-unitlist = row_units + column_units + square_units
-units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
-peers = dict((s, set(sum(units[s],[])) - set([s])) for s in boxes)
+    global unitlist
+    unitlist = row_units + column_units + square_units
+
+    if diagonal:
+        unitlist += diagonal_units
+
+    calculate_units()
+    calculate_peers()
+
+def calculate_units():
+    global units
+    units = dict((s, [u for u in unitlist if s in u]) for s in boxes)
+
+def calculate_peers():
+    global peers
+    peers = dict((s, set(sum(units[s],[])) - set([s])) for s in boxes)
+
+# Handle default setup
+setup()
 
 if __name__ == '__main__':
     diag_sudoku_grid = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
