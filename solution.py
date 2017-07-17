@@ -164,6 +164,7 @@ def reduce_puzzle(values):
         # Apply solving strategies
         eliminate(values)
         only_choice(values)
+        naked_twins(values)
 
         solved_values_after = solved_value_count(values)
         stalled = solved_values_before == solved_values_after
