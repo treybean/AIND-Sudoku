@@ -97,7 +97,7 @@ def only_choice(values):
         for box in unsolved_boxes:
             box_set = set(values[box])
             other_boxes = [b for b in unit if b != box] #Don't want to consider itself.
-            
+
             for b in other_boxes:
                 box_set = box_set - set(values[b])
 
@@ -106,8 +106,49 @@ def only_choice(values):
 
     return values
 
+def solved_value_count(values):
+    """
+    Deterine how many boxes have been solved, i.e. reduced to a single value.
+
+    Args:
+        values(dict): The sudoku in dictionary form.
+    Returns:
+        An integer represneting the number of boxes that have been solved.
+    """
+    return len([box for box in values.keys() if len(values[box]) == 1])
+
+
 def reduce_puzzle(values):
-    pass
+    """
+    Repeatedly apply the eliminate and only_choice strategies until either the
+    puzzle is solved or can't be reduced further.
+
+    Args:
+        values(dict): The sudokue in dictionary form
+    Returns:
+        The dictionary representation of the resulting sudoku grid.
+    """
+    stalled = False
+    while not stalled:
+        # Check how many boxes have a determined value
+        solved_values_before = solved_value_count(values)
+
+        # Apply solving strategies
+        eliminate(values)
+        only_choice(values)
+
+        solved_values_after = solved_value_count(values)
+        stalled = solved_values_before == solved_values_after
+
+        # I think this could only arise when fed an invalid values state, e.g.
+        # multiple boxes reduced to the same single digit within a unit. Keeping
+        # for consistency and guarding.
+        #
+        # Sanity check, return False if there is a box with zero available values:
+        if len([box for box in values.keys() if len(values[box]) == 0]):
+            return False
+
+    return values
 
 def search(values):
     pass
